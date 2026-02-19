@@ -182,6 +182,5 @@ cython_debug/
 .DS_Store
 *.DS_Store
 
-*dataset
 *dataset_processed/
 /AI/dataset_v
