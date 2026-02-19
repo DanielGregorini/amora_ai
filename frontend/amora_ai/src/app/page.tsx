@@ -5,12 +5,13 @@ import "@tensorflow/tfjs-backend-webgl"
 import { useEffect, useRef, useState } from "react"
 
 type Language = "en" | "pt"
+type Status = "ready" | "analyzing" | "amora" | "not_amora"
 
 export default function Home() {
   const [model, setModel] = useState<tf.LayersModel | null>(null)
-  const [label, setLabel] = useState<string>("Loading model...")
   const [imageURL, setImageURL] = useState<string | null>(null)
   const [language, setLanguage] = useState<Language>("en")
+  const [status, setStatus] = useState<Status>("ready")
 
   const [amoraProb, setAmoraProb] = useState<number>(0)
   const [notAmoraProb, setNotAmoraProb] = useState<number>(0)
@@ -25,7 +26,9 @@ export default function Home() {
       analyzing: "Analyzing...",
       blackberry: "🍓 It is Amora",
       notBlackberry: "❌ Not Amora",
-      switchLang: "Português"
+      switchLang: "Português",
+      class0: "Class 0 - Amora",
+      class1: "Class 1 - Not Amora"
     },
     pt: {
       title: "Detector de Amora 🍓",
@@ -34,11 +37,28 @@ export default function Home() {
       analyzing: "Analisando...",
       blackberry: "🍓 É Amora",
       notBlackberry: "❌ Não é Amora",
-      switchLang: "English"
+      switchLang: "English",
+      class0: "Classe 0 - Amora",
+      class1: "Classe 1 - Não Amora"
     }
   }
 
   const t = translations[language]
+
+  const getLabel = () => {
+    switch (status) {
+      case "ready":
+        return t.ready
+      case "analyzing":
+        return t.analyzing
+      case "amora":
+        return t.blackberry
+      case "not_amora":
+        return t.notBlackberry
+      default:
+        return ""
+    }
+  }
 
   useEffect(() => {
     const loadModel = async () => {
@@ -50,7 +70,7 @@ export default function Home() {
       )
 
       setModel(loadedModel)
-      setLabel(t.ready)
+      setStatus("ready")
     }
 
     loadModel()
@@ -66,7 +86,7 @@ export default function Home() {
   const runModel = async () => {
     if (!model || !imageRef.current) return
 
-    setLabel(t.analyzing)
+    setStatus("analyzing")
 
     const tensor = tf.browser
       .fromPixels(imageRef.current)
@@ -88,7 +108,7 @@ export default function Home() {
     setNotAmoraProb(notAmoraPercent)
 
     const isAmoraMain = amoraPercent > notAmoraPercent
-    setLabel(isAmoraMain ? t.blackberry : t.notBlackberry)
+    setStatus(isAmoraMain ? "amora" : "not_amora")
 
     tensor.dispose()
     prediction.dispose()
@@ -136,15 +156,13 @@ export default function Home() {
         {(amoraProb > 0 || notAmoraProb > 0) && (
           <div className="space-y-4">
 
-            {/* Main result */}
             <div className="text-center text-3xl font-bold text-purple-600">
-              {label}
+              {getLabel()}
             </div>
 
-            {/* Class 0 Amora */}
             <div>
               <p className="text-sm text-gray-600">
-                Class 0 - Amora: {amoraProb}%
+                {t.class0}: {amoraProb}%
               </p>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
@@ -154,10 +172,9 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Class 1 Not Amora */}
             <div>
               <p className="text-sm text-gray-600">
-                Class 1 - Not Amora: {notAmoraProb}%
+                {t.class1}: {notAmoraProb}%
               </p>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
