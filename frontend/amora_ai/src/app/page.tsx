@@ -9,9 +9,11 @@ type Language = "en" | "pt"
 export default function Home() {
   const [model, setModel] = useState<tf.LayersModel | null>(null)
   const [label, setLabel] = useState<string>("Loading model...")
-  const [confidence, setConfidence] = useState<number>(0)
   const [imageURL, setImageURL] = useState<string | null>(null)
   const [language, setLanguage] = useState<Language>("en")
+
+  const [amoraProb, setAmoraProb] = useState<number>(0)
+  const [notAmoraProb, setNotAmoraProb] = useState<number>(0)
 
   const imageRef = useRef<HTMLImageElement | null>(null)
 
@@ -19,23 +21,19 @@ export default function Home() {
     en: {
       title: "Amora Detector 🍓",
       upload: "Choose Image",
-      loading: "Loading model...",
       ready: "Upload an image",
       analyzing: "Analyzing...",
       blackberry: "🍓 It is Amora",
       notBlackberry: "❌ Not Amora",
-      confidence: "Confidence",
       switchLang: "Português"
     },
     pt: {
       title: "Detector de Amora 🍓",
       upload: "Escolher Imagem",
-      loading: "Carregando modelo...",
       ready: "Envie uma imagem",
       analyzing: "Analisando...",
-      blackberry: "🍓 É a Amora",
-      notBlackberry: "❌ Não é a Amora",
-      confidence: "Confiança",
+      blackberry: "🍓 É Amora",
+      notBlackberry: "❌ Não é Amora",
       switchLang: "English"
     }
   }
@@ -60,7 +58,6 @@ export default function Home() {
 
   const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return
-
     const file = event.target.files[0]
     const url = URL.createObjectURL(file)
     setImageURL(url)
@@ -81,14 +78,17 @@ export default function Home() {
     const prediction = model.predict(tensor) as tf.Tensor
     const data = await prediction.data()
 
-    const probability = data[0]
+    const notAmora = data[0]
+    const amora = 1 - notAmora
 
-    // Ajuste aqui se estiver invertido
-    const isBlackberry = probability < 0.5
-    const finalProb = isBlackberry ? 1 - probability : probability
+    const amoraPercent = Number((amora * 100).toFixed(2))
+    const notAmoraPercent = Number((notAmora * 100).toFixed(2))
 
-    setConfidence(Number((finalProb * 100).toFixed(2)))
-    setLabel(isBlackberry ? t.blackberry : t.notBlackberry)
+    setAmoraProb(amoraPercent)
+    setNotAmoraProb(notAmoraPercent)
+
+    const isAmoraMain = amoraPercent > notAmoraPercent
+    setLabel(isAmoraMain ? t.blackberry : t.notBlackberry)
 
     tensor.dispose()
     prediction.dispose()
@@ -133,26 +133,42 @@ export default function Home() {
           />
         )}
 
-        <div className="text-center space-y-2">
-          <h2 className="text-xl font-semibold text-gray-800">
-            {label}
-          </h2>
+        {(amoraProb > 0 || notAmoraProb > 0) && (
+          <div className="space-y-4">
 
-          {confidence > 0 && (
-            <>
-              <p className="text-gray-600">
-                {t.confidence}: {confidence}%
+            {/* Main result */}
+            <div className="text-center text-3xl font-bold text-purple-600">
+              {label}
+            </div>
+
+            {/* Class 0 Amora */}
+            <div>
+              <p className="text-sm text-gray-600">
+                Class 0 - Amora: {amoraProb}%
               </p>
-
-              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="h-full bg-purple-600 transition-all duration-500"
-                  style={{ width: `${confidence}%` }}
+                  className="bg-green-500 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${amoraProb}%` }}
                 />
               </div>
-            </>
-          )}
-        </div>
+            </div>
+
+            {/* Class 1 Not Amora */}
+            <div>
+              <p className="text-sm text-gray-600">
+                Class 1 - Not Amora: {notAmoraProb}%
+              </p>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  className="bg-red-500 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${notAmoraProb}%` }}
+                />
+              </div>
+            </div>
+
+          </div>
+        )}
 
       </div>
     </div>
