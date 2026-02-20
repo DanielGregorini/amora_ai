@@ -5,27 +5,25 @@ import shutil
 INPUT_DIR = "dataset"
 OUTPUT_DIR = "dataset_compressed"
 
-MAX_SIZE = (800, 800)   # Max allowed size
-JPEG_QUALITY = 90
+MAX_SIZE = 600
+JPEG_QUALITY = 70
 
 CLASSES = ["amora", "not_amora"]
 
-
 def compress_image(input_path, output_path):
-    """Convert to JPG and resize if larger than 800x800"""
+    """Convert to JPG, compress, and resize if larger than 600px while keeping aspect ratio"""
     try:
         with Image.open(input_path) as img:
             img = img.convert("RGB")
 
-            # Resize only if larger than 800x800
-            if img.width > MAX_SIZE[0] or img.height > MAX_SIZE[1]:
-                img.thumbnail(MAX_SIZE, Image.LANCZOS)
+            # Resize only if larger than MAX_SIZE
+            if img.width > MAX_SIZE or img.height > MAX_SIZE:
+                img.thumbnail((MAX_SIZE, MAX_SIZE), Image.LANCZOS)
 
             img.save(output_path, "JPEG", quality=JPEG_QUALITY, optimize=True)
 
     except Exception as e:
         print(f"Error processing {input_path}: {e}")
-
 
 def compress_dataset(input_dir=INPUT_DIR, output_dir=OUTPUT_DIR):
 
