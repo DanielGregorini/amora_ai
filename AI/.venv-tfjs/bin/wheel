@@ -1,4 +1,4 @@
-#!/Users/daniel/Developer/projetos/amora_ai/AI/.venv-tfjs/bin/python3.11
+#!/Users/daniel/Developer/projetos/amora_ai/AI/.venv-tfjs/bin/python3.12
 import sys
 from wheel.cli import main
 if __name__ == '__main__':

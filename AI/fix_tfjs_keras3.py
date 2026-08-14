@@ -80,7 +80,7 @@ def fix_model_json(path):
     with open(path, "w") as f:
         json.dump(model, f)
 
-    print(f"✅ {path} converted to a TF.js-compatible format")
+    print(f"{path} converted to a TF.js-compatible format")
 
 
 if __name__ == "__main__":

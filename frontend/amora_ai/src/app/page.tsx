@@ -20,12 +20,12 @@ export default function Home() {
 
   const translations = {
     en: {
-      title: "Amora Detector 🍓",
+      title: "Amora Detector",
       upload: "Choose Image",
       ready: "Upload an image",
       analyzing: "Analyzing...",
-      blackberry: "🍓 It is Amora",
-      notBlackberry: "❌ Not Amora",
+      blackberry: "It is Amora",
+      notBlackberry: "Not Amora",
       switchLang: "Português",
       class0: "Class 0 - Amora",
       class1: "Class 1 - Not Amora",
@@ -33,12 +33,12 @@ export default function Home() {
       download: "Download",
     },
     pt: {
-      title: "Detector de Amora 🍓",
+      title: "Detector de Amora",
       upload: "Escolher Imagem",
       ready: "Envie uma imagem",
       analyzing: "Analisando...",
-      blackberry: "🍓 É Amora",
-      notBlackberry: "❌ Não é Amora",
+      blackberry: "É Amora",
+      notBlackberry: "Não é Amora",
       switchLang: "English",
       class0: "Classe 0 - Amora",
       class1: "Classe 1 - Não Amora",
@@ -204,7 +204,7 @@ export default function Home() {
               download="amora_01.jpeg"
               className="mt-3 block text-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg"
             >
-              Baixar
+              {t.download}
             </a>
           </div>
 
@@ -219,7 +219,7 @@ export default function Home() {
               download="amora_02.jpeg"
               className="mt-3 block text-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg"
             >
-              Baixar
+              {t.download}
             </a>
           </div>
         </div>

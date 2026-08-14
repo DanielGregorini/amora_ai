@@ -184,3 +184,10 @@ cython_debug/
 
 *dataset_processed/
 /AI/dataset_v
+
+# local virtualenvs (tfjs converter, metal gpu)
+.venv-*/
+/AI/raw_dataset
+/AI/.venv-tfjs
+/AI/.venv-tfjs
+/AI/.venv-tfjs/bin

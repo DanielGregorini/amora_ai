@@ -52,9 +52,9 @@ def compress_dataset(input_dir=INPUT_DIR, output_dir=OUTPUT_DIR):
                 compress_image(input_path, output_path)
                 count += 1
 
-        print(f"✅ {cls}: {count - 1} images compressed")
+        print(f"{cls}: {count - 1} images compressed")
 
-    print("Compression completed 🚀")
+    print("Compression completed")
 
 
 if __name__ == "__main__":

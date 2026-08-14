@@ -11,7 +11,7 @@ This project includes:
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 AI/
@@ -22,6 +22,7 @@ AI/
 ├── output/
 ├── preprocess_images.py
 ├── train_amora.ipynb
+├── train_custom_models.ipynb
 
 frontend/
 ├── public/
@@ -36,9 +37,9 @@ frontend/
 
 ---
 
-## 🚀 How to Run the AI Model
+## How to Run the AI Model
 
-### 1️⃣ Preprocess the Dataset
+### 1. Preprocess the Dataset
 
 Before training the model, you must preprocess the images.
 
@@ -63,7 +64,7 @@ dataset_processed/
 
 ---
 
-### 2️⃣ Train the Model
+### 2. Train the Model
 
 After preprocessing is completed, open and run:
 
@@ -76,12 +77,20 @@ Run all cells to train the model.
 This notebook will:
 
 * Load the processed dataset
-* Train the AI model
+* Train the AI model (MobileNetV2)
 * Save the trained model
+
+To experiment with other architectures (EfficientNet, ResNet, DenseNet...) and different hyperparameters, use:
+
+```
+train_custom_models.ipynb
+```
+
+It has a configuration section where you pick the backbone from a model registry and adjust image size, batch size, learning rates, augmentation and fine-tuning settings.
 
 ---
 
-### 3️⃣ Output Files
+### 3. Output Files
 
 After training, the generated models will be located in:
 
@@ -101,7 +110,7 @@ The **TensorFlow.js model** can be used directly in the web frontend.
 
 ---
 
-## 🌐 Running on Web (Next.js)
+## Running on Web (Next.js)
 
 Move the TensorFlow.js model folder from:
 
@@ -123,7 +132,7 @@ await tf.loadLayersModel("/amora_model_tfjs/model.json")
 
 ---
 
-## 🧠 Notes
+## Notes
 
 * Dataset must contain two folders:
 
@@ -134,7 +143,7 @@ await tf.loadLayersModel("/amora_model_tfjs/model.json")
 
 ---
 
-## 📦 Requirements
+## Requirements
 
 Install Python dependencies:
 
@@ -144,7 +153,7 @@ pip install pillow tensorflow opencv-python
 
 ---
 
-## ✅ Workflow Summary
+## Workflow Summary
 
 1. Run preprocessing:
 
@@ -168,6 +177,6 @@ output/
 
 ---
 
-## 🍓 AMORA AI
+## AMORA AI
 
 Detecting Amora with Deep Learning.
